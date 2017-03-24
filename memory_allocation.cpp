@@ -67,31 +67,34 @@ void best(memory* m[],process* p,int size){
 }
 
 int main(){
-	memory* m[4];
-	m[0] = new memory(0,100);
-	m[1] = new memory(1,50);
-	m[2] = new memory(2,200);
-	m[3] = new memory(3,250);
-	int size = 4;
-	process* p1 = new process(1,50);
-	process* p2 = new process(2,202);
-	process* p3 = new process(3,103);
-	//first fit
-	
-	first(m,p1,4);
-	first(m,p2,4);
-	first(m,p3,4);
-	
-	worst(m,p1,4);
-	worst(m,p2,4);
-	worst(m,p3,4);
-	
-	best(m,p1,4);
-	best(m,p2,4);
-	best(m,p3,4);
-	cout<<"\tprocess\tfirst\tbest\tworst"<<endl<<endl;
-	cout<<"\t"<<p1->process_no<<"\t"<<p1->first->block_no<<"\t"<<p1->best->block_no<<"\t"<<p1->worst->block_no<<endl<<endl;
-	cout<<"\t"<<p2->process_no<<"\t"<<p2->first->block_no<<"\t"<<p2->best->block_no<<"\t"<<p2->worst->block_no<<endl<<endl;
-	cout<<"\t"<<p3->process_no<<"\t"<<p3->first->block_no<<"\t"<<p3->best->block_no<<"\t"<<p3->worst->block_no<<endl<<endl;	
+	int n,l;
+	cout<<"enter no of memory blocks: ";
+	cin>>n;
+	memory* m[n];
+	for(int i=0;i<n;i++)
+	{
+		int a,b;
+		cout<<"enter block_no and size:" ;
+		cin>>a>>b;
+		m[i] = new memory(a,b);
+	}
+	cout<<"enter no of processes:";
+	cin>>l;
+	process* p[l];
+	for(int i=0;i<l;i++)
+	{
+		int a,b;
+		cout<<"enter process no and size: ";
+		cin>>a>>b;
+		p[i] = new process(a,b);
+		first(m,p[i],n);
+		best(m,p[i],n);
+		worst(m,p[i],n);
+	}
+	cout<<endl<<endl;
+	cout<<"\t* process\tfirst\tbest\tworst *"<<endl<<endl;
+	for(int i=0;i<l;i++){
+		cout<<"\t* "<<p[i]->process_no<<"\t\t"<<p[i]->first->block_no<<"\t"<<p[i]->best->block_no<<"\t"<<p[i]->worst->block_no<<" *"<<endl<<endl;
+	}	
 	return 0;
 }
