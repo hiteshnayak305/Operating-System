@@ -47,10 +47,12 @@ class memory{
 		int block_no;
 		bool occupied;
 		int process_no;
+		int remSize;
 	public:
 		memory(int block_no, int size){
 			this->block_no = block_no;
 			this->size = size;
+			this->remSize = size;
 			this->occupied = false;
 			this->process_no = -1;
 		}
@@ -67,14 +69,19 @@ class memory{
 		int getProcessNo(){
 			return process_no;
 		}
+		int getRemSize(){
+			return remSize;
+		}
 		
 		void allocate(process p){
 			this->occupied = true;
-			this->process_no = p.getProcessNo(); 
+			this->process_no = p.getProcessNo();
+			this->remSize = this->size - p.getSize(); 
 		}
 		void free(){
 			this->occupied = false;
 			this->process_no = -1;
+			this->remSize = this->size;
 		}
 };
 
@@ -137,6 +144,7 @@ void best(memory* m[],process* p,int size){
 
 int main(){
 	int n,l;
+	int remFirst=0, remBest=0, remWorst=0;
 	cout<<"enter no of memory blocks: ";
 	cin>>n;
 	memory* m[n];
@@ -160,21 +168,37 @@ int main(){
 	for(int i =0;i<l;i++){
 		first(m,p[i],n);
 	}
+	for(int i=0;i<n;i++){
+		if(m[i]->getStatus() == true){
+			remFirst = remFirst + m[i]->getRemSize();
+		}
+	}
 	reset(m,n);
 	//sort memory block
 		sort1(m,n);
 	for(int i =0;i<l;i++){			
 		best(m,p[i],n);
 	}
+	for(int i=0;i<n;i++){
+		if(m[i]->getStatus() == true){
+			remBest = remBest + m[i]->getRemSize();
+		}
+	}
 	reset(m,n);
 	for(int i =0;i<l;i++){
 		worst(m,p[i],n);
+	}
+	for(int i=0;i<n;i++){
+		if(m[i]->getStatus() == true){
+			remWorst = remWorst + m[i]->getRemSize();
+		}
 	}
 	reset(m,n);
 	cout<<endl<<endl;
 	cout<<"\t* process\tfirst\tbest\tworst *"<<endl<<endl;
 	for(int i=0;i<l;i++){
 		cout<<"\t* "<<p[i]->getProcessNo()<<"\t\t"<<cond(p[i]->getFirst())<<"\t"<<cond(p[i]->getBest())<<"\t"<<cond(p[i]->getWorst())<<" \t*"<<endl<<endl;
-	}	
+	}
+	cout<<"\t* "<<"total waste"<<"\t"<<remFirst<<"\t"<<remBest<<"\t"<<remWorst<<" \t*"<<endl<<endl;	
 	return 0;
 }
