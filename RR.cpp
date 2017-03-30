@@ -51,9 +51,10 @@ bool comp2(process p1, process p2){
 	return p1.getProcessNo() < p2.getProcessNo();   //if true then no swapping
 }
 int main(){
-	int n;
-	cout<<"enter no of processes: ";
+	int n,k;
+	cout<<"enter no of process and time quantum: ";
 	cin>>n;
+	cin>>k;
 	process p[n];
 	for(int i=0;i<n;i++){
 		int a,b,c;
@@ -61,26 +62,44 @@ int main(){
 		cin>>a>>b>>c;
 		p[i] = process(a,b,c);
 	}
-	sort(p,p+n,comp);
+	//sort(p,p+n,comp);
+	
+	
 	
 	int totalTime = 0;
 	for(int i=0;i<n;i++){
 		totalTime = totalTime + p[i].getBurst();
 	}
 	int current = 0;
+	int c = 0;
 	for(int i=0;i<totalTime;i++){
-		p[current].execute();
-		for(int j=current+1;j<n;j++){
-			p[j].wait();
+		//process
+		if(p[current].getFinish() == true || p[current].getArrival() > i){
+			current = (current+1)%n;
+			i--;
+			c = 0;
+			continue;
+		}else{
+			p[current].execute();
+			for(int j=0;j<n;j++){
+				if(p[j].getFinish() == false && j != current){
+					p[j].wait();
+				}
+			}
+			c++;
 		}
-		if(p[current].getFinish() == true){
-			current++;
-		} 
+		if(c >= k){
+			current = (current+1)%n;
+			c = 0;
+		}
 	}
+	
+	
 	int totalWait = 0;
 	for(int i=0;i<n;i++){
 		totalWait = totalWait + p[i].getWaitTime();
 	}
+	
 	//sort(p,p+n,comp2);  if required
 	cout<<"\tprocess no\tburst\tarrival\twait time"<<endl;
 	for(int i =0;i<n;i++){

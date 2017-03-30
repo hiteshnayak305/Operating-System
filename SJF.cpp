@@ -34,6 +34,9 @@ class process{
 		int getArrival(){
 			return arrival;
 		}
+		int getRemBurst(){
+			return remBurst;
+		}
 		
 		void execute(){
 			remBurst--;
@@ -50,6 +53,19 @@ bool comp(process p1, process p2){
 bool comp2(process p1, process p2){
 	return p1.getProcessNo() < p2.getProcessNo();   //if true then no swapping
 }
+
+int sortJob(process p[],int n,int time){
+	int t = -1;
+	int mburst = 1000000;
+	for(int i=0;i<n;i++){
+		if(p[i].getRemBurst() < mburst && p[i].getArrival() <= time && p[i].getFinish() == false){
+			mburst = p[i].getRemBurst();
+			t = i;
+		}
+	}
+	return t;
+}
+
 int main(){
 	int n;
 	cout<<"enter no of processes: ";
@@ -61,7 +77,7 @@ int main(){
 		cin>>a>>b>>c;
 		p[i] = process(a,b,c);
 	}
-	sort(p,p+n,comp);
+	//sort(p,p+n,comp);
 	
 	int totalTime = 0;
 	for(int i=0;i<n;i++){
@@ -69,22 +85,27 @@ int main(){
 	}
 	int current = 0;
 	for(int i=0;i<totalTime;i++){
-		p[current].execute();
-		for(int j=current+1;j<n;j++){
-			p[j].wait();
-		}
-		if(p[current].getFinish() == true){
-			current++;
-		} 
+		 int current = sortJob(p,n,i);
+		 cout<<current<<endl;
+		 if(current == -1) break;
+		 p[current].execute();
+		 for(int j=0;j<n;j++){
+		 	if(j != current && p[j].getFinish() == false){
+		 		p[j].wait();
+		 	}
+		 }
 	}
+	
+	
 	int totalWait = 0;
 	for(int i=0;i<n;i++){
 		totalWait = totalWait + p[i].getWaitTime();
 	}
+	
 	//sort(p,p+n,comp2);  if required
 	cout<<"\tprocess no\tburst\tarrival\twait time"<<endl;
 	for(int i =0;i<n;i++){
-		cout<<"\t\t"<<p[i].getProcessNo()<<"\t"<<p[i].getBurst()<<"\t"<<p[i].getArrival()<<"\t"<<p[i].getWaitTime()+/*to add arrival of process or start of execution of programs*/p[0].getArrival()<<endl;
+		cout<<"\t\t"<<p[i].getProcessNo()<<"\t"<<p[i].getBurst()<<"\t"<<p[i].getArrival()<<"\t"<<p[i].getWaitTime()+/*to add arrival of first process or start of execution of programs*/p[0].getArrival()<<endl;
 	}
 	cout<<endl<<"Avarage wait time = "<<(float)totalWait/(float)n<<"\tper Process"<<endl;
 	cout<<"Throughput        = "<<(float)n/(float)totalTime<<"\tper Time"<<endl; 
