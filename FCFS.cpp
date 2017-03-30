@@ -82,7 +82,7 @@ int main(){
 	//sort(p,p+n,comp2);  if required
 	cout<<"\tprocess no\tburst\tarrival\twait time"<<endl;
 	for(int i =0;i<n;i++){
-		cout<<"\t\t"<<p[i].getProcessNo()<<"\t"<<p[i].getBurst()<<"\t"<<p[i].getArrival()<<"\t"<<p[i].getWaitTime()<<endl;
+		cout<<"\t\t"<<p[i].getProcessNo()<<"\t"<<p[i].getBurst()<<"\t"<<p[i].getArrival()<<"\t"<<p[i].getWaitTime()+/*to add arrival of process or start of execution of programs*/p[0].getArrival()<<endl;
 	}
 	cout<<endl<<"Avarage wait time = "<<(float)totalWait/(float)n<<"\tper Process"<<endl;
 	cout<<"Throughput        = "<<(float)n/(float)totalTime<<"\tper Time"<<endl; 
