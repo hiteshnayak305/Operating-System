@@ -86,7 +86,6 @@ int main(){
 	int current = 0;
 	for(int i=0;i<totalTime;i++){
 		 int current = sortJob(p,n,i);
-		 cout<<current<<endl;
 		 if(current == -1) break;
 		 p[current].execute();
 		 for(int j=0;j<n;j++){
