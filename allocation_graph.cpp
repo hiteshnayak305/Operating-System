@@ -5,11 +5,11 @@ using namespace std;
 class Graph{
     vector<int> resources;
     vector<int> processes;
-    vector<pair<int,int> > relations;
+    vector<pair<pair<int,int>,int> > relations;
 public:
 
     Graph(){}
-    Graph(vector<int> resources, vector<int> processes, vector<pair<int,int> > relations){
+    Graph(vector<int> resources, vector<int> processes, vector<pair<pair<int,int>,int> > relations){
         this->resources = resources;
         this->processes = processes;
         this->relations = relations;
@@ -46,7 +46,7 @@ public:
         }
         //relations
         for(int i=0;i<relations.size();i++){
-            graph[relations[i].first-1][relations[i].second-1] = 1;
+            graph[relations[i].first.first-1][relations[i].first.second-1] = relations[i].second;
         }
         for(int i=0;i<matrixSize;i++){
             for(int j=0;j<matrixSize;j++){
@@ -59,7 +59,7 @@ public:
 int main(){
     vector<int> resource;
     vector<int> processe;
-    vector<pair<int,int> > relation;
+    vector<pair<pair<int,int>,int> > relation;
     int r,p,rel;
     cout<<"enter no of resources, processes, relations: ";
     cin>>r>>p>>rel;
@@ -80,18 +80,18 @@ int main(){
         cout<<"type of relation request->r or allocate ->a : ";
         cin>>c;
         switch(c){
-            int k,l;
+            int k,l,m;
             case 'r':
-                cout<<"enter relation as p->r: ";
+                cout<<"enter relation as p->r: and no of instance";
                 //relations as p->r request r->p allocated
-                cin>>k>>l;
-                relation.push_back(make_pair(k,l+p));
+                cin>>k>>l>>m;
+                relation.push_back(make_pair(make_pair(k,l+p),m));
                 break;
             case 'a':
-                cout<<"enter relation as r->p: ";
+                cout<<"enter relation as r->p: and instances ";
                 //relations as p->r request r->p allocated
-                cin>>k>>l;
-                relation.push_back(make_pair(k+p,l));
+                cin>>k>>l>>m;
+                relation.push_back(make_pair(make_pair(k+p,l),m));
                 break;
         }
     }
